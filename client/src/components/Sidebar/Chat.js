@@ -1,7 +1,8 @@
 import React from 'react';
-import { Box } from '@material-ui/core';
+import { Box, Badge } from '@material-ui/core';
 import { BadgeAvatar, ChatContent } from '../Sidebar';
 import { makeStyles } from '@material-ui/core/styles';
+import { styled } from '@mui/material/styles';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,9 +18,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const StyledBadge = styled(Badge)(({ theme }) => ({
+  '& .MuiBadge-badge': {
+    right: 22,
+    padding: '11.1px 8px',
+    background: '#3A8DFF',
+    color: '#fff',
+    fontFamily: `${theme.typography.fontFamily}`,
+    fontWeight: 'bold',
+    letterSpacing: 0,
+  },
+}));
+
 const Chat = ({ conversation, setActiveChat }) => {
   const classes = useStyles();
   const { otherUser } = conversation;
+  const numUnreadMessage = conversation.messages.filter(
+    message => message.statusRead === false && message.senderId === otherUser.id
+  )
 
   const handleClick = async (conversation) => {
     await setActiveChat(conversation.otherUser.username);
@@ -34,6 +50,7 @@ const Chat = ({ conversation, setActiveChat }) => {
         sidebar={true}
       />
       <ChatContent conversation={conversation} />
+      <StyledBadge badgeContent={numUnreadMessage.length} />
     </Box>
   );
 };
