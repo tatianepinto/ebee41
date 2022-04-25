@@ -31,10 +31,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 const Chat = ({ conversation, setActiveChat }) => {
   const classes = useStyles();
-  const { otherUser } = conversation;
-  const numUnreadMessage = conversation.messages.filter(
-    message => message.statusRead === false && message.senderId === otherUser.id
-  )
+  const { otherUser, numUnreadMessage } = conversation;
 
   const handleClick = async (conversation) => {
     await setActiveChat(conversation.otherUser.username);
@@ -50,9 +47,8 @@ const Chat = ({ conversation, setActiveChat }) => {
       />
       <ChatContent 
         conversation={conversation} 
-        numUnreadMessage={numUnreadMessage.length}
       />
-      <StyledBadge badgeContent={numUnreadMessage.length} />
+      <StyledBadge badgeContent={numUnreadMessage} />
     </Box>
   );
 };

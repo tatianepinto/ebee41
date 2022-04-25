@@ -24,10 +24,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ChatContent = ({ conversation, numUnreadMessage }) => {
+const ChatContent = ({ conversation }) => {
   const classes = useStyles();
 
-  const { otherUser } = conversation;
+  const { otherUser, numUnreadMessage } = conversation;
   const latestMessageText = conversation.id && conversation.latestMessageText;
   const statusReadClass = `${classes.previewText} ${numUnreadMessage > 0  && classes.previewTextUnread}`;
 
