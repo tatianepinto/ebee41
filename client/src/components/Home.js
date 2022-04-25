@@ -193,7 +193,7 @@ const Home = ({ user, logout }) => {
       socket.off('add-online-user', addOnlineUser);
       socket.off('remove-offline-user', removeOfflineUser);
       socket.off('new-message', addMessageToConversation);
-      socket.on('read-message', markAsRead);
+      socket.off('read-message', markAsRead);
     };
   }, [markAsRead, addMessageToConversation, addOnlineUser, removeOfflineUser, socket]);
 
