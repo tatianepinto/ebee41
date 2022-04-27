@@ -16,8 +16,6 @@ const useStyles = makeStyles((theme) => ({
   previewText: {
     fontSize: 12,
     letterSpacing: -0.17,
-  },
-  previewTextRead: {
     color: "#9CADC8",
   },
   previewTextUnread: {
@@ -29,15 +27,9 @@ const useStyles = makeStyles((theme) => ({
 const ChatContent = ({ conversation }) => {
   const classes = useStyles();
 
-  const { otherUser } = conversation;
+  const { otherUser, numUnreadMessage } = conversation;
   const latestMessageText = conversation.id && conversation.latestMessageText;
-  const lastIndex = conversation.messages.length - 1;
-  const statusRead = 
-    conversation.messages.length > 0
-    && conversation.messages[lastIndex].senderId === otherUser.id
-    ? conversation.messages[lastIndex].statusRead 
-    : true;
-  const statusReadClass = `${classes.previewText} ${statusRead ? classes.previewTextRead : classes.previewTextUnread}`;
+  const statusReadClass = `${classes.previewText} ${numUnreadMessage > 0  && classes.previewTextUnread}`;
 
   return (
     <Box className={classes.root}>

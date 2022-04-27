@@ -1,8 +1,7 @@
 import React from 'react';
 import { Box, Badge } from '@material-ui/core';
 import { BadgeAvatar, ChatContent } from '../Sidebar';
-import { makeStyles } from '@material-ui/core/styles';
-import { styled } from '@mui/material/styles';
+import { makeStyles, styled } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,15 +29,23 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
-const Chat = ({ conversation, setActiveChat }) => {
+const Chat = ({ 
+  conversation, 
+  setActiveChat, 
+  postReadMessage, 
+}) => {
   const classes = useStyles();
-  const { otherUser } = conversation;
-  const numUnreadMessage = conversation.messages.filter(
-    message => message.statusRead === false && message.senderId === otherUser.id
-  )
+  const { otherUser, numUnreadMessage } = conversation;
 
   const handleClick = async (conversation) => {
     await setActiveChat(conversation.otherUser.username);
+    if(conversation.unreadMessages && conversation.unreadMessages.length > 0)
+      conversation.unreadMessages.forEach(async message => {
+        await postReadMessage({ 
+          otherUserId: message.senderId,
+          messageId: message.id, 
+        });
+      }); 
   };
 
   return (
@@ -49,8 +56,10 @@ const Chat = ({ conversation, setActiveChat }) => {
         online={otherUser.online}
         sidebar={true}
       />
-      <ChatContent conversation={conversation} />
-      <StyledBadge badgeContent={numUnreadMessage.length} />
+      <ChatContent 
+        conversation={conversation} 
+      />
+      <StyledBadge badgeContent={numUnreadMessage} />
     </Box>
   );
 };
