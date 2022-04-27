@@ -9,17 +9,7 @@ router.post("/", async (req, res, next) => {
       return res.sendStatus(401);
     }
     const senderId = req.user.id;
-    const { recipientId, text, conversationId, sender, messageId } = req.body;
-
-    //Change statusRead to true
-    if(messageId){
-      await Message.update({ statusRead: true }, {
-        where: {
-          id: messageId 
-        }
-      });
-      return res.json({ messageIdRead: messageId });
-    }
+    const { recipientId, text, conversationId, sender } = req.body;
 
     // if we already know conversation id, we can save time and just add it to message and return
     if (conversationId) {
