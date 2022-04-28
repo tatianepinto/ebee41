@@ -1,7 +1,7 @@
 import React from 'react';
-import { Box } from '@material-ui/core';
+import { Box, Badge } from '@material-ui/core';
 import { BadgeAvatar, ChatContent } from '../Sidebar';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, styled } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,12 +17,39 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Chat = ({ conversation, setActiveChat }) => {
+const StyledBadge = styled(Badge)(({ theme }) => ({
+  '& .MuiBadge-badge': {
+    right: 22,
+    padding: '11.1px 8px',
+    background: '#3A8DFF',
+    color: '#fff',
+    fontFamily: `${theme.typography.fontFamily}`,
+    fontWeight: 'bold',
+    letterSpacing: 0,
+  },
+}));
+
+const Chat = ({
+  user, 
+  conversation, 
+  setActiveChat, 
+  postReadMessage, 
+}) => {
   const classes = useStyles();
-  const { otherUser } = conversation;
+  const { otherUser, numUnreadMessage } = conversation;
+  const userId = user.id;
 
   const handleClick = async (conversation) => {
     await setActiveChat(conversation.otherUser.username);
+    if(conversation.unreadMessages && conversation.unreadMessages.length > 0)
+      conversation.unreadMessages.forEach(async message => {
+        await postReadMessage({ 
+          conversationId: message.conversationId,
+          userId: userId,
+          otherUserId: message.senderId,
+          messageId: message.id, 
+        });
+      }); 
   };
 
   return (
@@ -33,7 +60,10 @@ const Chat = ({ conversation, setActiveChat }) => {
         online={otherUser.online}
         sidebar={true}
       />
-      <ChatContent conversation={conversation} />
+      <ChatContent 
+        conversation={conversation} 
+      />
+      <StyledBadge badgeContent={numUnreadMessage} />
     </Box>
   );
 };
