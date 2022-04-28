@@ -55,7 +55,7 @@ const Home = ({ user, logout }) => {
   };
 
   const saveReadMessage = async (body) => {
-    const { data } = await axios.post('/api/read-messages', body);
+    const { data } = await axios.patch('/api/read-messages', body);
     return data;
   };
 
@@ -106,6 +106,8 @@ const Home = ({ user, logout }) => {
 
   const readMessage = useCallback( (data) => {
     socket.emit('read-message', {
+      conversationId: data.conversationId,
+      userId: data.userId,
       otherUserId: data.otherUserId,
       messageIdRead: data.messageIdRead,
     });
@@ -198,6 +200,8 @@ const Home = ({ user, logout }) => {
           );
         }
         if(messagesToRead.length > 0) await postReadMessage({ 
+          conversationId: messagesToRead.at(0).conversationId,
+          userId: userId,
           otherUserId: messagesToRead.at(0).senderId,
           messageId: messagesToRead.at(0).id, 
         }); 

@@ -29,19 +29,23 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
-const Chat = ({ 
+const Chat = ({
+  user, 
   conversation, 
   setActiveChat, 
   postReadMessage, 
 }) => {
   const classes = useStyles();
   const { otherUser, numUnreadMessage } = conversation;
+  const userId = user.id;
 
   const handleClick = async (conversation) => {
     await setActiveChat(conversation.otherUser.username);
     if(conversation.unreadMessages && conversation.unreadMessages.length > 0)
       conversation.unreadMessages.forEach(async message => {
         await postReadMessage({ 
+          conversationId: message.conversationId,
+          userId: userId,
           otherUserId: message.senderId,
           messageId: message.id, 
         });
